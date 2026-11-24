@@ -12,13 +12,16 @@ export default function Header({
             <div className="container-xl">
                 <div className="row justify-content-center justify-content-md-between">
                     <div className="col-8 col-md-3">
-                        <a href="/">
-                            <img className="img-fluid" src="/img/logo.svg" alt="Logo GuitarLA" />
+                        <a href="/" className="logo" aria-label="SoundHouse - Inicio">
+                            <img className="logo__icon" src="/img/soundhouse-icon.svg" alt="" />
+                            <span className="logo__text">
+                                Sound<strong>House</strong>
+                            </span>
                         </a>
                     </div>
                     <nav className="col-md-6 a mt-5 d-flex align-items-start justify-content-end">
                         <div className="carrito">
-                            <img className="img-fluid" src="/img/carrito.png" alt="Carrito de compras" />
+                            <img className="img-fluid" src="/img/cart.svg" alt="Carrito de compras" />
 
                             <div id="carrito" className="bg-white p-3">
                                 {isEmpty ? (

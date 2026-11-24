@@ -1,4 +1,35 @@
 @charset "UTF-8";
+
+/* ===== Identidad visual SoundHouse ===== */
+:root {
+  --color-carbon: #15171C;
+  --color-dorado: #C8963E;
+  --color-crema: #F6F2EA;
+  --color-gris: #6B6F78;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.logo__icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.logo__text {
+  color: var(--color-crema);
+  font-size: 1.9rem;
+  letter-spacing: 0.02em;
+}
+
+.logo__text strong {
+  color: var(--color-dorado);
+  font-weight: 900;
+}
 .fw-black {
   font-weight: 900;
 }
