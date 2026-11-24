@@ -1,52 +1,49 @@
-import { useState,useEffect,useMemo} from "react"
+import { useState, useEffect, useMemo } from "react"
 import { db } from "../data/db"
 
+const MIN_ITEMS = 1
+const MAX_ITEMS = 5
 
-export const useCart = ()=>{
-    
-
-    
-    const initialCart = () => {
+const initialCart = () => {
+    try {
         const localStorageCart = localStorage.getItem("cart")
         return localStorageCart ? JSON.parse(localStorageCart) : []
+    } catch {
+        // Si el dato guardado está corrupto, empezamos con el carrito vacío
+        return []
     }
+}
 
+export const useCart = () => {
     const [data] = useState(db)
-    const [cart,setCart] = useState(initialCart)
+    const [cart, setCart] = useState(initialCart)
 
-    const MIN_ITEMS = 1
-    const MAX_ITEMS = 5
+    useEffect(() => {
+        localStorage.setItem("cart", JSON.stringify(cart))
+    }, [cart])
 
+    function addToCart(item) {
+        const itemExists = cart.some(guitar => guitar.id === item.id)
 
-    useEffect(()=>{
-        localStorage.setItem("cart",JSON.stringify(cart))
-    },[cart])
-
-
-    function addToCart(item){       
-        const itemExists = cart.findIndex(guitar =>guitar.id === item.id)
-        if(itemExists >= 0){//existe en carrito
-            if(cart[itemExists].quantity >= MAX_ITEMS)return
-            const updatedCart = [...cart]
-            updatedCart[itemExists].quantity++
-            setCart(updatedCart)
-        }else{
-            item.quantity=1
-            setCart( [...cart,item])
+        if (itemExists) {
+            // Si ya está en el carrito, sumamos 1 (respetando el máximo)
+            increaseQuantity(item.id)
+        } else {
+            // Creamos un objeto nuevo en lugar de modificar el original de db
+            setCart([...cart, { ...item, quantity: 1 }])
         }
-
     }
 
-    function removeFromCart(id){
-        setCart(prevCart =>prevCart.filter(guitar =>guitar.id !== id))
+    function removeFromCart(id) {
+        setCart(prevCart => prevCart.filter(guitar => guitar.id !== id))
     }
 
-    function decreaseQuantity(id){
+    function decreaseQuantity(id) {
         const updatedCart = cart.map(item => {
             if (item.id === id && item.quantity > MIN_ITEMS) {
                 return {
                     ...item,
-                    quantity: item.quantity -1
+                    quantity: item.quantity - 1
                 }
             }
             return item
@@ -54,10 +51,10 @@ export const useCart = ()=>{
         setCart(updatedCart)
     }
 
-    function increaseQuantity(id){
+    function increaseQuantity(id) {
         const updatedCart = cart.map(item => {
             if (item.id === id && item.quantity < MAX_ITEMS) {
-                return{
+                return {
                     ...item,
                     quantity: item.quantity + 1
                 }
@@ -67,14 +64,15 @@ export const useCart = ()=>{
         setCart(updatedCart)
     }
 
-    function clearCart(){
-        setCart([]) 
+    function clearCart() {
+        setCart([])
     }
 
-     const isEmpty = useMemo( () => cart.length === 0, [cart])
-    const cartTotal =useMemo ( () =>cart.reduce((total,item) =>total+(item.quantity
-         * item.price),0), [cart])
-        
+    const isEmpty = useMemo(() => cart.length === 0, [cart])
+    const cartTotal = useMemo(
+        () => cart.reduce((total, item) => total + item.quantity * item.price, 0),
+        [cart]
+    )
 
     return {
         data,
@@ -87,5 +85,4 @@ export const useCart = ()=>{
         isEmpty,
         cartTotal
     }
-
 }
