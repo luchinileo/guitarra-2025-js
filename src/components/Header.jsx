@@ -10,99 +10,94 @@ export default function Header({
     cartTotal
 }) {
     return (
-        <header className="py-5 header">
-            <div className="container-xl">
-                <div className="row justify-content-center justify-content-md-between">
-                    <div className="col-8 col-md-3">
-                        <a href="/" className="logo" aria-label="SoundHouse - Inicio">
-                            <img className="logo__icon" src="/img/soundhouse-icon.svg" alt="" />
-                            <span className="logo__text">
-                                Sound<strong>House</strong>
-                            </span>
-                        </a>
+        <header className="header">
+            <div className="container header__bar">
+                <a href="/" className="logo" aria-label="SoundHouse - Inicio">
+                    <img className="logo__icon" src="/img/soundhouse-icon.svg" alt="" />
+                    <span className="logo__text">
+                        Sound<strong>House</strong>
+                    </span>
+                </a>
+
+                <div className="cart">
+                    <button type="button" className="cart__toggle" aria-label="Ver carrito">
+                        <img src="/img/cart.svg" alt="" />
+                    </button>
+
+                    <div className="cart__panel">
+                        {isEmpty ? (
+                            <p className="cart__empty">El carrito está vacío</p>
+                        ) : (
+                            <>
+                                <ul className="cart__list">
+                                    {cart.map(guitar => (
+                                        <li key={guitar.id} className="cart-item">
+                                            <img
+                                                className="cart-item__image"
+                                                src={`/img/${guitar.image}.jpg`}
+                                                alt={`Guitarra ${guitar.name}`}
+                                            />
+                                            <div>
+                                                <p className="cart-item__name">{guitar.name}</p>
+                                                <p className="cart-item__price">{formatCurrency(guitar.price)}</p>
+                                            </div>
+                                            <div className="cart-item__quantity">
+                                                <button
+                                                    type="button"
+                                                    className="btn-icon"
+                                                    aria-label={`Restar una ${guitar.name}`}
+                                                    onClick={() => decreaseQuantity(guitar.id)}
+                                                >
+                                                    -
+                                                </button>
+                                                <span>{guitar.quantity}</span>
+                                                <button
+                                                    type="button"
+                                                    className="btn-icon"
+                                                    aria-label={`Sumar una ${guitar.name}`}
+                                                    onClick={() => increaseQuantity(guitar.id)}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                className="btn-icon btn-icon--remove"
+                                                aria-label={`Eliminar ${guitar.name} del carrito`}
+                                                onClick={() => removeFromCart(guitar.id)}
+                                            >
+                                                ×
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                <p className="cart__total">
+                                    Total a pagar: <strong>{formatCurrency(cartTotal)}</strong>
+                                </p>
+                            </>
+                        )}
+
+                        <button
+                            type="button"
+                            className="btn btn--outline btn--block"
+                            onClick={clearCart}
+                        >
+                            Vaciar carrito
+                        </button>
                     </div>
-                    <nav className="col-md-6 a mt-5 d-flex align-items-start justify-content-end">
-                        <div className="carrito">
-                            <img className="img-fluid" src="/img/cart.svg" alt="Carrito de compras" />
-
-                            <div id="carrito" className="bg-white p-3">
-                                {isEmpty ? (
-                                    <p className="text-center">El carrito está vacío</p>
-                                ) : (
-                                    <>
-                                        <table className="w-100 table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Imagen</th>
-                                                    <th>Nombre</th>
-                                                    <th>Precio</th>
-                                                    <th>Cantidad</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {cart.map(guitar => (
-                                                    <tr key={guitar.id}>
-                                                        <td>
-                                                            <img
-                                                                className="img-fluid"
-                                                                src={`/img/${guitar.image}.jpg`}
-                                                                alt={`Guitarra ${guitar.name}`}
-                                                            />
-                                                        </td>
-                                                        <td>{guitar.name}</td>
-                                                        <td className="fw-bold">{formatCurrency(guitar.price)}</td>
-                                                        <td className="flex align-items-start gap-4">
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-dark"
-                                                                aria-label={`Restar una ${guitar.name}`}
-                                                                onClick={() => decreaseQuantity(guitar.id)}
-                                                            >
-                                                                -
-                                                            </button>
-                                                            {guitar.quantity}
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-dark"
-                                                                aria-label={`Sumar una ${guitar.name}`}
-                                                                onClick={() => increaseQuantity(guitar.id)}
-                                                            >
-                                                                +
-                                                            </button>
-                                                        </td>
-                                                        <td>
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-danger"
-                                                                aria-label={`Eliminar ${guitar.name} del carrito`}
-                                                                onClick={() => removeFromCart(guitar.id)}
-                                                            >
-                                                                X
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-
-                                        <p className="text-end">
-                                            Total a pagar: <span className="fw-bold">{formatCurrency(cartTotal)}</span>
-                                        </p>
-                                    </>
-                                )}
-
-                                <button
-                                    type="button"
-                                    className="btn btn-dark w-100 mt-3 p-2"
-                                    onClick={clearCart}
-                                >
-                                    Vaciar Carrito
-                                </button>
-                            </div>
-                        </div>
-                    </nav>
                 </div>
+            </div>
+
+            <div className="container hero">
+                <p className="hero__eyebrow">Tienda de instrumentos musicales</p>
+                <h1 className="hero__title">
+                    Encontrá el sonido <span>que te define</span>
+                </h1>
+                <p className="hero__text">
+                    Guitarras eléctricas, acústicas, clásicas y bajos para cada etapa de tu música.
+                </p>
+                <a href="#catalogo" className="btn btn--primary">Ver catálogo</a>
             </div>
         </header>
     )

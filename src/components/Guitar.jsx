@@ -4,22 +4,27 @@ export default function Guitar({ guitar, addToCart }) {
     const { name, image, description, price } = guitar
 
     return (
-        <div className="col-md-6 col-lg-4 my-4 row align-items-center">
-            <div className="col-4">
-                <img className="img-fluid" src={`/img/${image}.jpg`} alt={`Guitarra ${name}`} />
-            </div>
-            <div className="col-8">
-                <h3 className="text-black fs-4 fw-bold text-uppercase">{name}</h3>
-                <p>{description}</p>
-                <p className="fw-black text-primary fs-3">{formatCurrency(price)}</p>
+        <article className="card">
+            <img
+                className="card__image"
+                src={`/img/${image}.jpg`}
+                alt={`Guitarra ${name}`}
+                width="800"
+                height="1000"
+                loading="lazy"
+            />
+            <div className="card__body">
+                <h3 className="card__title">{name}</h3>
+                <p className="card__description">{description}</p>
+                <p className="card__price">{formatCurrency(price)}</p>
                 <button
                     type="button"
-                    className="btn btn-dark w-100"
+                    className="btn btn--primary btn--block"
                     onClick={() => addToCart(guitar)}
                 >
-                    Agregar al Carrito
+                    Agregar al carrito
                 </button>
             </div>
-        </div>
+        </article>
     )
 }

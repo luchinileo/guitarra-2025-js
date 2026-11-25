@@ -4,6 +4,14 @@ import { db } from "../data/db"
 const MIN_ITEMS = 1
 const MAX_ITEMS = 5
 
+// Suma 1 a un producto del carrito, sin pasar del máximo
+const increaseItem = (cart, id) =>
+    cart.map(item =>
+        item.id === id && item.quantity < MAX_ITEMS
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+    )
+
 const initialCart = () => {
     try {
         const localStorageCart = localStorage.getItem("cart")
@@ -32,16 +40,20 @@ export const useCart = () => {
         localStorage.setItem("cart", JSON.stringify(cart))
     }, [cart])
 
-    function addToCart(item) {
-        const itemExists = cart.some(guitar => guitar.id === item.id)
+    // Todas las actualizaciones usan la forma setCart(prevCart => ...).
+    // Así React nos da siempre el carrito más reciente, aunque lleguen
+    // varios clics seguidos antes de que se vuelva a renderizar.
 
-        if (itemExists) {
-            // Si ya está en el carrito, sumamos 1 (respetando el máximo)
-            increaseQuantity(item.id)
-        } else {
-            // Creamos un objeto nuevo en lugar de modificar el original de db
-            setCart([...cart, { ...item, quantity: 1 }])
-        }
+    function addToCart(item) {
+        setCart(prevCart => {
+            const itemExists = prevCart.some(guitar => guitar.id === item.id)
+
+            // Si ya está en el carrito, sumamos 1 (respetando el máximo).
+            // Si no, agregamos un objeto nuevo sin modificar el original de db.
+            return itemExists
+                ? increaseItem(prevCart, item.id)
+                : [...prevCart, { ...item, quantity: 1 }]
+        })
     }
 
     function removeFromCart(id) {
@@ -49,29 +61,17 @@ export const useCart = () => {
     }
 
     function decreaseQuantity(id) {
-        const updatedCart = cart.map(item => {
-            if (item.id === id && item.quantity > MIN_ITEMS) {
-                return {
-                    ...item,
-                    quantity: item.quantity - 1
-                }
-            }
-            return item
-        })
-        setCart(updatedCart)
+        setCart(prevCart =>
+            prevCart.map(item =>
+                item.id === id && item.quantity > MIN_ITEMS
+                    ? { ...item, quantity: item.quantity - 1 }
+                    : item
+            )
+        )
     }
 
     function increaseQuantity(id) {
-        const updatedCart = cart.map(item => {
-            if (item.id === id && item.quantity < MAX_ITEMS) {
-                return {
-                    ...item,
-                    quantity: item.quantity + 1
-                }
-            }
-            return item
-        })
-        setCart(updatedCart)
+        setCart(prevCart => increaseItem(prevCart, id))
     }
 
     function clearCart() {

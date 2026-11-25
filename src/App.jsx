@@ -27,10 +27,12 @@ function App() {
                 cartTotal={cartTotal}
             />
 
-            <main className="container-xl mt-5">
-                <h2 className="text-center">Nuestra Colección</h2>
+            <main id="catalogo" className="container catalog">
+                <h2 className="section-title">
+                    Nuestra <span>Colección</span>
+                </h2>
 
-                <div className="row mt-5">
+                <div className="catalog__grid">
                     {data.map(guitar => (
                         <Guitar
                             key={guitar.id}
@@ -41,10 +43,16 @@ function App() {
                 </div>
             </main>
 
-            <footer className="bg-dark mt-5 py-5">
-                <div className="container-xl">
-                    <p className="text-white text-center fs-4 mt-4 m-md-0">
-                        SoundHouse - Todos los derechos reservados
+            <footer className="footer">
+                <div className="container footer__content">
+                    <a href="/" className="logo" aria-label="SoundHouse - Inicio">
+                        <img className="logo__icon" src="/img/soundhouse-icon.svg" alt="" />
+                        <span className="logo__text">
+                            Sound<strong>House</strong>
+                        </span>
+                    </a>
+                    <p className="footer__text">
+                        © {new Date().getFullYear()} SoundHouse · Proyecto de portfolio. Fotos de Unsplash.
                     </p>
                 </div>
             </footer>
