@@ -12,7 +12,8 @@ function App() {
         increaseQuantity,
         clearCart,
         isEmpty,
-        cartTotal
+        cartTotal,
+        cartCount
     } = useCart()
 
     return (
@@ -25,6 +26,7 @@ function App() {
                 clearCart={clearCart}
                 isEmpty={isEmpty}
                 cartTotal={cartTotal}
+                cartCount={cartCount}
             />
 
             <main id="catalogo" className="container catalog">

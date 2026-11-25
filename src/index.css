@@ -244,9 +244,30 @@ button {
   box-shadow: var(--sombra);
 }
 
-/* Por ahora el panel se abre con hover (en el Paso 5 pasa a clic/toque) */
-.cart:hover .cart__panel {
+/* El panel se abre con clic o toque: Header agrega esta clase cuando isCartOpen es true */
+.cart__panel--open {
   display: block;
+}
+
+/* Contador de productos sobre el ícono */
+.cart__toggle {
+  position: relative;
+}
+
+.cart__count {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.3rem;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background-color: var(--color-dorado);
+  color: var(--color-carbon);
+  font-size: 0.75rem;
+  font-weight: 900;
+  line-height: 1.35rem;
+  text-align: center;
 }
 
 .cart__empty {

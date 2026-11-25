@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react"
 import { formatCurrency } from "../helpers"
 
 export default function Header({
@@ -7,8 +8,41 @@ export default function Header({
     increaseQuantity,
     clearCart,
     isEmpty,
-    cartTotal
+    cartTotal,
+    cartCount
 }) {
+    const [isCartOpen, setIsCartOpen] = useState(false)
+    const cartRef = useRef(null)       // todo el bloque del carrito (botón + panel)
+    const toggleRef = useRef(null)     // el botón que abre y cierra
+
+    // Mientras el carrito está abierto, escuchamos dos eventos para cerrarlo:
+    // un toque o clic fuera del carrito, y la tecla Escape.
+    useEffect(() => {
+        if (!isCartOpen) return
+
+        function handlePointerDown(event) {
+            if (!cartRef.current.contains(event.target)) {
+                setIsCartOpen(false)
+            }
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === "Escape") {
+                setIsCartOpen(false)
+                toggleRef.current.focus() // devolvemos el foco al botón del carrito
+            }
+        }
+
+        document.addEventListener("pointerdown", handlePointerDown)
+        document.addEventListener("keydown", handleKeyDown)
+
+        // Limpieza: al cerrarse el carrito, dejamos de escuchar
+        return () => {
+            document.removeEventListener("pointerdown", handlePointerDown)
+            document.removeEventListener("keydown", handleKeyDown)
+        }
+    }, [isCartOpen])
+
     return (
         <header className="header">
             <div className="container header__bar">
@@ -19,12 +53,26 @@ export default function Header({
                     </span>
                 </a>
 
-                <div className="cart">
-                    <button type="button" className="cart__toggle" aria-label="Ver carrito">
+                <div className="cart" ref={cartRef}>
+                    <button
+                        type="button"
+                        ref={toggleRef}
+                        className="cart__toggle"
+                        aria-label={`Carrito: ${cartCount} ${cartCount === 1 ? "producto" : "productos"}`}
+                        aria-expanded={isCartOpen}
+                        aria-controls="cart-panel"
+                        onClick={() => setIsCartOpen(open => !open)}
+                    >
                         <img src="/img/cart.svg" alt="" />
+                        {cartCount > 0 && (
+                            <span className="cart__count" aria-hidden="true">{cartCount}</span>
+                        )}
                     </button>
 
-                    <div className="cart__panel">
+                    <div
+                        id="cart-panel"
+                        className={`cart__panel ${isCartOpen ? "cart__panel--open" : ""}`}
+                    >
                         {isEmpty ? (
                             <p className="cart__empty">El carrito está vacío</p>
                         ) : (

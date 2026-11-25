@@ -83,6 +83,11 @@ export const useCart = () => {
         () => cart.reduce((total, item) => total + item.quantity * item.price, 0),
         [cart]
     )
+    // Cantidad total de unidades (ej.: 2 Aurora + 1 Sol = 3)
+    const cartCount = useMemo(
+        () => cart.reduce((total, item) => total + item.quantity, 0),
+        [cart]
+    )
 
     return {
         data,
@@ -93,6 +98,7 @@ export const useCart = () => {
         increaseQuantity,
         clearCart,
         isEmpty,
-        cartTotal
+        cartTotal,
+        cartCount
     }
 }
