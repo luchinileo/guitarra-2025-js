@@ -1,3 +1,5 @@
+import { formatCurrency } from "../helpers"
+
 export default function Header({
     cart,
     removeFromCart,
@@ -49,7 +51,7 @@ export default function Header({
                                                             />
                                                         </td>
                                                         <td>{guitar.name}</td>
-                                                        <td className="fw-bold">${guitar.price}</td>
+                                                        <td className="fw-bold">{formatCurrency(guitar.price)}</td>
                                                         <td className="flex align-items-start gap-4">
                                                             <button
                                                                 type="button"
@@ -85,7 +87,7 @@ export default function Header({
                                         </table>
 
                                         <p className="text-end">
-                                            Total a pagar: <span className="fw-bold">${cartTotal}</span>
+                                            Total a pagar: <span className="fw-bold">{formatCurrency(cartTotal)}</span>
                                         </p>
                                     </>
                                 )}

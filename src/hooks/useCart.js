@@ -7,7 +7,17 @@ const MAX_ITEMS = 5
 const initialCart = () => {
     try {
         const localStorageCart = localStorage.getItem("cart")
-        return localStorageCart ? JSON.parse(localStorageCart) : []
+        if (!localStorageCart) return []
+
+        // Tomamos los datos actuales de cada producto desde db (precio, imagen, nombre)
+        // y del carrito guardado conservamos solo la cantidad.
+        // Así un carrito viejo nunca muestra precios desactualizados ni imágenes rotas.
+        return JSON.parse(localStorageCart)
+            .map(savedItem => {
+                const product = db.find(guitar => guitar.id === savedItem.id)
+                return product ? { ...product, quantity: savedItem.quantity } : null
+            })
+            .filter(Boolean)
     } catch {
         // Si el dato guardado está corrupto, empezamos con el carrito vacío
         return []
