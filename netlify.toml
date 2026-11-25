@@ -1,0 +1,21 @@
+# Configuración de despliegue para Netlify
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # Comando que Netlify ejecuta para compilar el proyecto
+  command = "npm run build"
+  # Carpeta que genera Vite con la versión de producción
+  publish = "dist"
+
+[build.environment]
+  # Versión de Node.js que usa Netlify para compilar (Vite 6 necesita Node 18 o superior)
+  NODE_VERSION = "22"
+
+# Si alguien entra o recarga una ruta que no existe como archivo,
+# Netlify devuelve index.html en lugar de un error 404.
+# Hoy la app tiene una sola página, pero esto evita problemas
+# si en el futuro se agregan rutas con React Router.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
